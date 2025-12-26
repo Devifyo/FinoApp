@@ -40,20 +40,25 @@
         @include('layouts.partials.sidebar')
 
         <div class="flex-1 flex flex-col overflow-hidden">
-            <header class="flex items-center justify-between h-16 px-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-                <button @click="sidebarOpen = !sidebarOpen" class="text-gray-500 focus:outline-none lg:hidden">
+            <header class="flex items-center justify-between h-16 px-4 md:px-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 gap-4">
+                
+                <button @click="sidebarOpen = !sidebarOpen" class="flex-shrink-0 text-gray-500 focus:outline-none lg:hidden">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
 
-                <h1 class="text-lg font-semibold text-gray-800 dark:text-white">{{ $title ?? 'Dashboard' }}</h1>
+                <h1 class="flex-1 min-w-0 truncate text-base md:text-lg font-semibold text-gray-800 dark:text-white text-center lg:text-left">
+                    {{ $title ?? 'Dashboard' }}
+                </h1>
 
-                <div x-data="{ open: false }" class="relative">
-                    <button @click="open = !open" class="flex items-center focus:outline-none">
-                        <span class="mr-2 text-sm font-medium text-gray-600 dark:text-gray-300">{{ Auth::user()->name }} ({{ ucfirst(Auth::user()->role) }})</span>
+                <div x-data="{ open: false }" class="relative flex-shrink-0">
+                    <button @click="open = !open" class="flex items-center focus:outline-none max-w-[200px]">
+                        <span class="hidden md:block mr-2 text-sm font-medium text-gray-600 dark:text-gray-300 truncate">
+                            {{ Auth::user()->name }} ({{ ucfirst(Auth::user()->role) }})
+                        </span>
                         <img class="h-8 w-8 rounded-full object-cover border border-gray-200" src="https://ui-avatars.com/api/?name={{ Auth::user()->name }}&background=random" alt="Avatar">
                     </button>
 
-                    <div x-show="open" @click.away="open = false" x-cloak class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-md shadow-lg py-1 z-50 ring-1 ring-black ring-opacity-5">
+                    <div x-show="open" @click.away="open = false" x-cloak class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-md shadow-lg py-1 z-50 ring-1 ring-black ring-opacity-5 origin-top-right">
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600">
@@ -63,7 +68,6 @@
                     </div>
                 </div>
             </header>
-
             <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-900 p-6">
                 {{ $slot }}
             </main>

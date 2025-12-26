@@ -24,8 +24,19 @@
             </div>
 
             <div class="md:col-span-4">
-                <x-input type="date" label="Start Date" wire:model="start_date" name="start_date" />
-            </div>
+    <x-input 
+        label="Start Date" 
+        wire:model="start_date" 
+        name="start_date" 
+        placeholder="Select Start Date..."
+        onfocus="this.showPicker()" 
+        onclick="this.showPicker()"
+        class="cursor-pointer"
+        type="{{ $start_date ? 'date' : 'text' }}"
+        onfocus="this.type='date'"
+        onblur="if(!this.value) this.type='text'"
+    />
+</div>
 
             <div class="md:col-span-4">
                 <x-select label="Status" wire:model="status" name="status">
@@ -50,53 +61,60 @@
             
             @php $tableInput = "w-full border-none bg-transparent focus:ring-0 text-sm p-0 placeholder-gray-400"; @endphp
 
-            <table class="w-full text-left text-sm">
-                <thead class="bg-white dark:bg-gray-800 text-xs uppercase text-gray-500 font-semibold border-b border-gray-100 dark:border-gray-700">
-                    <tr>
-                        <th class="px-5 py-3 w-1/3">User</th>
-                        <th class="px-5 py-3">Role</th>
-                        <th class="px-5 py-3">Share %</th>
-                        <th class="px-5 py-3">Main Dev</th>
-                        <th class="px-5 py-3 text-center"></th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100 dark:divide-gray-700 bg-white dark:bg-gray-800">
-                    @foreach($assigned_members as $index => $member)
-                    <tr wire:key="member-row-{{ $index }}" class="group hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                        <td class="px-5 py-3">
-                            <select wire:model="assigned_members.{{ $index }}.user_id" class="{{ $tableInput }} font-medium text-gray-900 dark:text-gray-100">
-                                <option value="">Select User...</option>
-                                @foreach($users as $u)
-                                    <option value="{{ $u->id }}">{{ $u->name }}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td class="px-5 py-3">
-                            <select wire:model.live="assigned_members.{{ $index }}.role" class="{{ $tableInput }} text-gray-600 dark:text-gray-400">
-                                <option value="developer">Developer</option>
-                                <option value="bidder">Bidder</option>
-                                <option value="idle">Idle</option>
-                                <option value="solo">Solo (Both)</option>
-                            </select>
-                        </td>
-                        <td class="px-5 py-3">
-                            <div class="flex items-center bg-gray-50 dark:bg-gray-700 rounded-md px-2 py-1 w-24">
-                                <input type="number" wire:model="assigned_members.{{ $index }}.contribution_share" class="w-full border-none bg-transparent focus:ring-0 text-sm p-0 text-right font-bold text-indigo-600" min="0" max="100">
-                                <span class="ml-1 text-gray-400 text-xs">%</span>
-                            </div>
-                        </td>
-                        <td class="px-5 py-3">
-                            <input type="checkbox" wire:model="assigned_members.{{ $index }}.is_main_developer" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4">
-                        </td>
-                        <td class="px-5 py-3 text-center">
-                            <button type="button" wire:click="removeMember({{ $index }})" class="text-gray-300 group-hover:text-red-500 transition-colors p-1 hover:bg-red-50 rounded-full">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                            </button>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm min-w-[600px]">
+                    <thead class="bg-white dark:bg-gray-800 text-xs uppercase text-gray-500 font-semibold border-b border-gray-100 dark:border-gray-700">
+                        <tr>
+                            <th class="px-5 py-3 w-1/3">User</th>
+                            <th class="px-5 py-3">Role</th>
+                            <th class="px-5 py-3">Share %</th>
+                            <th class="px-5 py-3">Main Dev</th>
+                            <th class="px-5 py-3 text-center"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 dark:divide-gray-700 bg-white dark:bg-gray-800">
+                        @foreach($assigned_members as $index => $member)
+                        <tr wire:key="member-row-{{ $index }}" class="group hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                            <td class="px-5 py-3">
+                                <select wire:model="assigned_members.{{ $index }}.user_id" class="{{ $tableInput }} font-medium text-gray-900 dark:text-gray-100">
+                                    <option value="">Select User...</option>
+                                    @foreach($users as $u)
+                                        <option value="{{ $u->id }}">{{ $u->name }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td class="px-5 py-3">
+                                <select wire:model.live="assigned_members.{{ $index }}.role" class="{{ $tableInput }} text-gray-600 dark:text-gray-400">
+                                    <option value="developer">Developer</option>
+                                    <option value="bidder">Bidder</option>
+                                    <option value="idle">Idle</option>
+                                    <option value="solo">Solo (Both)</option>
+                                </select>
+                            </td>
+                            <td class="px-5 py-3">
+                                <div class="flex items-center bg-gray-50 dark:bg-gray-700 rounded-md px-2 py-1 w-24">
+                                    <input type="number" 
+                                           wire:model="assigned_members.{{ $index }}.contribution_share" 
+                                           class="w-full border-none bg-transparent focus:ring-0 text-sm p-0 text-right font-bold text-indigo-600" 
+                                           min="0" 
+                                           max="100" 
+                                           placeholder="0">
+                                    <span class="ml-1 text-gray-400 text-xs">%</span>
+                                </div>
+                            </td>
+                            <td class="px-5 py-3">
+                                <input type="checkbox" wire:model="assigned_members.{{ $index }}.is_main_developer" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4">
+                            </td>
+                            <td class="px-5 py-3 text-center">
+                                <button type="button" wire:click="removeMember({{ $index }})" class="text-gray-300 group-hover:text-red-500 transition-colors p-1 hover:bg-red-50 rounded-full">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </button>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
         @error('assigned_members') <div class="mt-2 text-red-500 text-xs font-medium">{{ $message }}</div> @enderror
 
