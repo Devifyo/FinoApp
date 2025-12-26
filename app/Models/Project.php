@@ -12,9 +12,13 @@ class Project extends Model
         'name', 
         'client_name', 
         'platform', 
-        'status'
+        'status',
+        'start_date'
     ];
 
+    // protected $casts = [
+    //     'start_date' => 'date',
+    // ];
     /**
      * Get all members assigned to this project.
      */

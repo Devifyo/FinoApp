@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
+    <title>{{ 'Sign In' }} | {{ config('app.name', 'Financial App') }}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="description" content="Secure access to FinoApp. Sign in to manage your project portfolios, review contribution benchmarks, and track revenue allocations.">
+    <meta name="robots" content="noindex, nofollow"> <meta property="og:title" content="FinoApp Secure Portal">
+    <meta property="og:description" content="Authorized access for project stakeholders. Manage your professional revenue distributions securely.">
+    <meta property="og:image" content="{{ asset('images/auth-preview.jpg') }}">
+    <meta property="og:type" content="website">
 
-    <title>{{ config('app.name', 'Financial App') }}</title>
-
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">

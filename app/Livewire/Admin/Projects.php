@@ -116,7 +116,7 @@ class Projects extends Component
         $this->platform = $project->platform;
         $this->start_date = $project->start_date; // <--- LOAD START DATE
         $this->status = $project->status;
-
+        // dd($this->start_date);
         $this->assigned_members = $project->members->map(function($m) {
             return [
                 'user_id' => $m->user_id,
@@ -189,7 +189,7 @@ class Projects extends Component
     {   
         $this->authorize('view projects');
         return view('livewire.admin.projects', [
-            'projects' => Project::with('members.user')->latest()->paginate(9)
+            'projects' => Project::with('members.user')->withSum('earnings', 'total_amount')->latest()->paginate(9)
         ])->layout('layouts.app', ['title' => 'Project Management']);
     }
 }

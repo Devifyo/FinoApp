@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
+    <title>{{ $title ?? 'Dashboard' }} - {{ config('app.name') }}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="description" content="FinoApp: Streamline project management and revenue distribution. Automate profit allocation among team members based on contribution benchmarks and project milestones.">
+    <meta property="og:title" content="FinoApp | Professional Project Revenue Allocation">
+    <meta property="og:description" content="A specialized platform for project managers to manage team distributions. Automate your revenue splits based on verified contribution percentages.">
+    <meta property="og:image" content="{{ asset('images/og-share.jpg') }}">
+    <meta property="og:type" content="website">
 
-    <title>{{ $title ?? 'Dashboard' }} - Financial App</title>
-
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/airbnb.css">
