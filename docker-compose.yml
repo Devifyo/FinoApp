@@ -1,4 +1,3 @@
-version: "3.7"
 services:
   app:
     build:
@@ -27,7 +26,7 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_USER: ${DB_USERNAME}
     volumes:
-      - ./docker-compose/mysql:/var/lib/mysql
+      - db_data:/var/lib/mysql
     networks:
       - fino-network
 
@@ -37,7 +36,6 @@ services:
     restart: unless-stopped
     ports:
       - "8081:80"
-      # - "443:443" # Add this for HTTPS later
     volumes:
       - ./:/var/www
       - ./docker-compose/nginx:/etc/nginx/conf.d
@@ -48,6 +46,22 @@ services:
       - app
       - db
 
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: fino-phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8082:80"
+    environment:
+      - PMA_HOST=db
+      - PMA_ARBITRARY=1
+    networks:
+      - fino-network
+
 networks:
   fino-network:
     driver: bridge
+
+# THIS IS THE PART YOU WERE MISSING:
+volumes:
+  db_data:
