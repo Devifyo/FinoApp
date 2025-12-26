@@ -1,0 +1,53 @@
+version: "3.7"
+services:
+  app:
+    build:
+      args:
+        user: finouser
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    image: fino-app
+    container_name: fino-app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    networks:
+      - fino-network
+
+  db:
+    image: mariadb:10.6
+    container_name: fino-db
+    restart: unless-stopped
+    command: --innodb-buffer-pool-size=64M
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+    volumes:
+      - ./docker-compose/mysql:/var/lib/mysql
+    networks:
+      - fino-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: fino-nginx
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+      # - "443:443" # Add this for HTTPS later
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/nginx:/etc/nginx/conf.d
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    networks:
+      - fino-network
+    depends_on:
+      - app
+      - db
+
+networks:
+  fino-network:
+    driver: bridge
