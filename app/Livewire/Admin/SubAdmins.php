@@ -31,8 +31,8 @@ class SubAdmins extends Component
     public function render()
     {
         // List only Sub-Admins
-        $subAdmins = User::role('sub_admin')->latest()->paginate(10);
-        
+        $roleSubAdmin = config('constant.roles.sub_admin');
+        $subAdmins = User::role($roleSubAdmin)->with('roles')->latest()->paginate(10);
         return view('livewire.admin.sub-admins', [
             'subAdmins' => $subAdmins
         ])->layout('layouts.app', ['title' => 'Manage Sub-Admins']);

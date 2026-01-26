@@ -31,8 +31,9 @@ class Users extends Component
 
     public function render()
     {   $this->authorize('view users');
+        $roleMember = config('constant.roles.member');
         return view('livewire.admin.users', [
-            'users' => User::orderBy('created_at', 'desc')->where('role', '!=', 'admin')->paginate(10),
+            'users' => User::role($roleMember)->orderBy('created_at', 'desc')->where('role', '!=', 'admin')->paginate(10),
         ])->layout('layouts.app', ['title' => 'User Management']);
     }
 

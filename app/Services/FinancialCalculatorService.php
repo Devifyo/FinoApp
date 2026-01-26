@@ -33,7 +33,7 @@ class FinancialCalculatorService
 
         foreach ($project->members as $member) {
             $sharePercent = (float) $member->contribution_share;
-            
+            // dd($sharePercent);
             // Calculate Member Share based on DISTRIBUTABLE amount
             $amount = ($distributable * $sharePercent) / 100;
 
