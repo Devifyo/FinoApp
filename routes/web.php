@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\ResetPassword;
+use App\Http\Controllers\MediaUploadController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -55,3 +56,8 @@ Route::middleware('auth')->group(function () {
     // Member Routes
 
 });
+
+
+Route::get('/media-upload', [MediaUploadController::class, 'show'])->name('media.form');
+Route::post('/media-upload/auth', [MediaUploadController::class, 'authenticate'])->name('media.auth');
+Route::post('/media-upload/store', [MediaUploadController::class, 'store'])->name('media.store');
