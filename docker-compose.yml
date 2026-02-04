@@ -1,67 +1,75 @@
+version: '3.8'
+
 services:
   app:
     build:
-      args:
-        user: finouser
-        uid: 1000
-      context: ./
+      context: .
       dockerfile: Dockerfile
-    image: fino-app
-    container_name: fino-app
+    container_name: fino_app
     restart: unless-stopped
     working_dir: /var/www
     volumes:
       - ./:/var/www
-    networks:
-      - fino-network
-
-  db:
-    image: mariadb:10.6
-    container_name: fino-db
-    restart: unless-stopped
-    command: --innodb-buffer-pool-size=64M
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_USER: ${DB_USERNAME}
-    volumes:
-      - db_data:/var/lib/mysql
+      - APP_ENV=${APP_ENV}
+      - APP_KEY=${APP_KEY}
+      - APP_URL=https://fino.devifyo.cloud
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      # FIX 1: CORRECT DATABASE NAME
+      - DB_DATABASE=fino_app
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
     networks:
-      - fino-network
+      - default
+    depends_on:
+      - db
 
   nginx:
     image: nginx:alpine
-    container_name: fino-nginx
+    container_name: fino_web
     restart: unless-stopped
-    ports:
-      - "8081:80"
     volumes:
       - ./:/var/www
-      - ./docker-compose/nginx:/etc/nginx/conf.d
-      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     networks:
-      - fino-network
+      - web_network
+      - default
     depends_on:
       - app
-      - db
+
+  db:
+    image: mariadb:10.6
+    container_name: fino_db
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      # FIX 2: ENSURE DATABASE NAME MATCHES
+      - MYSQL_DATABASE=fino_app
+    volumes:
+      - volume_to_test:/var/lib/mysql
+    networks:
+      - default
 
   phpmyadmin:
-    image: phpmyadmin:latest
-    container_name: fino-phpmyadmin
-    restart: unless-stopped
-    ports:
-      - "8082:80"
+    image: phpmyadmin
+    container_name: fino_pma
     environment:
       - PMA_HOST=db
-      - PMA_ARBITRARY=1
+      - PMA_ABSOLUTE_URI=https://fino.devifyo.cloud/dbase/
     networks:
-      - fino-network
+      - default
+      - web_network
+    depends_on:
+      - db
+
+volumes:
+  volume_to_test:
+    external: true
+    # FIX 3: USE THE MOST LIKELY VOLUME
+    name: finoapp_db_data
 
 networks:
-  fino-network:
-    driver: bridge
-
-# THIS IS THE PART YOU WERE MISSING:
-volumes:
-  db_data:
+  web_network:
+    external: true
