@@ -17,7 +17,6 @@ services:
       - DB_CONNECTION=mysql
       - DB_HOST=db
       - DB_PORT=3306
-      # FIX 1: CORRECT DATABASE NAME
       - DB_DATABASE=fino_app
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
@@ -33,6 +32,8 @@ services:
     volumes:
       - ./:/var/www
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "127.0.0.1:8081:80"
     networks:
       - web_network
       - default
@@ -45,10 +46,10 @@ services:
     restart: unless-stopped
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
-      # FIX 2: ENSURE DATABASE NAME MATCHES
       - MYSQL_DATABASE=fino_app
     volumes:
-      - volume_to_test:/var/lib/mysql
+      # CRITICAL CHANGE: Pointing to the folder you found
+      - ./docker-compose/mysql:/var/lib/mysql
     networks:
       - default
 
@@ -58,18 +59,16 @@ services:
     environment:
       - PMA_HOST=db
       - PMA_ABSOLUTE_URI=https://fino.devifyo.cloud/dbase/
+    ports:
+      - "127.0.0.1:8082:80"
     networks:
       - default
       - web_network
     depends_on:
       - db
 
-volumes:
-  volume_to_test:
-    external: true
-    # FIX 3: USE THE MOST LIKELY VOLUME
-    name: finoapp_db_data
-
 networks:
   web_network:
     external: true
+  default:
+    driver: bridge
