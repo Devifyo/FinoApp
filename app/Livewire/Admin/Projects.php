@@ -48,7 +48,7 @@ class Projects extends Component
 
     public function mount()
     {
-        $this->users = User::where('role', '!=', User::ROLE_ADMIN)
+        $this->users = User::whereNotIn('role', [User::ROLE_ADMIN, User::SUB_ADMIN])
                        ->orderBy('name')
                        ->get();
         $this->settings = Setting::pluck('value', 'key')->toArray();

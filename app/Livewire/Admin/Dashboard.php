@@ -16,8 +16,7 @@ class Dashboard extends Component
         $totalProjects = Project::count();
         $activeProjects = Project::where('status', 'active')->count();
         $totalEarnings = Earning::sum('total_amount'); 
-        $totalMembers = User::where('role', '!=', 'admin')->count();
-
+        $totalMembers = User::whereNotIn('role', [User::ROLE_ADMIN, User::SUB_ADMIN])->count();
         // 2. Fetch Earnings (Money In)
         $earnings = Earning::with('project')
             ->latest('created_at')

@@ -35,6 +35,7 @@ class User extends Authenticatable
 
     const ROLE_ADMIN = 'admin';
     const ROLE_MEMBER = 'member';
+    const SUB_ADMIN = 'sub_admin';
 
     /**
      * Get the attributes that should be cast.

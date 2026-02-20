@@ -12,10 +12,10 @@ class AdminUserSeeder extends Seeder
     {
         // 1. Create the User
         $admin = User::updateOrCreate(
-            ['email' => 'admin@example.com'], 
+            ['email' => 'admin@gmail.com'], 
             [
                 'name' => 'Super Admin',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('pass@admin'),
                 'role' => 'admin', // This is your legacy column
             ]
         );
